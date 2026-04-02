@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SICTC Syllabus Portal</title>
+    <style>
+        :root {
+            /* Official SICTC Logo Colors */
+            --sictc-blue: #1B4B6E;        /* Pantone 2955U / Blue */
+            --sictc-green: #6B813A;       /* Pantone 7496U / Green */
+            
+            /* Mandalorian / Beskar Palette */
+            --beskar-steel: #b0b0b0;
+            --beskar-dark: #2a2a2a;
+            --mando-accent: #d4af37;      /* Subtle Gold/Brass accent */
+            
+            /* Background and Neutral Tones */
+            --bg-muted-green: #E9EDDF;    /* Soft, non-glare sage green */
+            --sictc-black: #1A1A1B;
+            --sictc-white: #FFFFFF;
+            --sictc-cream: #FDFDFD;
+            --sictc-grey-dark: #555555;
+            --error-red: #D32F2F;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: var(--bg-muted-green);
+            color: var(--sictc-black);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            width: 100%;
+            max-width: 450px;
+            border-radius: 4px; /* Sharper, more industrial corners */
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+            border: 2px solid var(--beskar-steel);
+            border-top: 10px solid var(--sictc-blue);
+            position: relative;
+        }
+
+        /* HUD Style Corners */
+        .card::before, .card::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--sictc-green);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .card::before { top: 10px; left: 10px; border-right: 0; border-bottom: 0; }
+        .card::after { bottom: 10px; right: 10px; border-left: 0; border-top: 0; }
+
+        .header {
+            padding: 35px 20px 25px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.5);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .southern-indiana {
+            font-family: "Franklin Gothic Medium Cond", "Arial Narrow", Arial, sans-serif;
+            font-size: 1.4rem;
+            color: var(--sictc-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            line-height: 1.1;
+            margin-bottom: 2px;
+        }
+
+        .career-tech {
+            font-family: "Swis721 Cn BT", "Helvetica Condensed", "Arial Narrow", sans-serif;
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--sictc-green);
+            text-transform: uppercase;
+            line-height: 1;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: var(--sictc-grey-dark);
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--sictc-blue);
+            display: inline-block;
+            padding-bottom: 4px;
+        }
+
+        .form-section {
+            padding: 30px 35px 40px 35px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: var(--sictc-blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--beskar-steel);
+            border-radius: 2px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            outline: none;
+            background-color: rgba(255,255,255,0.8);
+            font-family: 'Courier New', Courier, monospace; /* Tech feel */
+        }
+
+        input:focus {
+            border-color: var(--sictc-green);
+            box-shadow: 0 0 10px rgba(107, 129, 58, 0.2);
+        }
+
+        .captcha-container {
+            background: var(--beskar-dark);
+            padding: 12px;
+            border-radius: 2px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid var(--sictc-green);
+        }
+
+        #captcha-display {
+            font-family: "Courier New", Courier, monospace;
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 5px;
+            color: var(--sictc-green);
+            text-shadow: 0 0 8px rgba(107, 129, 58, 0.8);
+            user-select: none;
+            padding: 0 10px;
+        }
+
+        .refresh-btn {
+            background: none;
+            border: none;
+            color: var(--sictc-white);
+            cursor: pointer;
+            font-size: 1.3rem;
+            padding: 5px;
+            opacity: 0.7;
+        }
+
+        .refresh-btn:hover { opacity: 1; transform: scale(1.1); }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 2px;
+            font-size: 1rem;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn-primary {
+            background-color: var(--sictc-blue);
+            color: white;
+            border-bottom: 4px solid #0d2a3f;
+        }
+
+        .btn-primary:active {
+            border-bottom-width: 0;
+            transform: translateY(4px);
+        }
+
+        .btn-secondary {
+            background-color: var(--sictc-green);
+            color: white;
+            margin-top: 15px;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--sictc-blue);
+            border: 2px solid var(--sictc-blue);
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 0.85rem;
+        }
+
+        .error-message {
+            color: var(--sictc-white);
+            background: var(--error-red);
+            padding: 10px;
+            border-radius: 2px;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            display: none;
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        /* Success View */
+        .success-view {
+            display: none;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .viewer-container {
+            position: relative;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .pdf-frame {
+            width: 100%;
+            height: 400px;
+            border: 2px solid var(--beskar-steel);
+            border-radius: 2px;
+            background: #FFF;
+        }
+
+        .pdf-frame:fullscreen {
+            width: 100vw;
+            height: 100vh;
+            border: none;
+        }
+
+        .success-icon {
+            display: inline-flex;
+            width: 60px;
+            height: 60px;
+            background: var(--beskar-dark);
+            color: var(--sictc-green);
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 15px;
+            border: 2px solid var(--sictc-green);
+            box-shadow: 0 0 15px rgba(107, 129, 58, 0.4);
+        }
+
+        .hidden { display: none; }
+
+        @media (max-width: 480px) {
+            .card { border-radius: 0; min-height: 100vh; max-width: none; border-top-width: 15px; }
+            body { padding: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card" id="main-card">
+        <!-- Login View -->
+        <div id="login-view">
+            <div class="header">
+                <div class="southern-indiana">Southern Indiana</div>
+                <div class="career-tech">Career & Technical Center</div>
+                <div class="subtitle">Guild Protocol</div>
+            </div>
+
+            <div class="form-section">
+                <div id="error-box" class="error-message">
+                    Tracking Fob Mismatch. Try again.
+                </div>
+
+                <div class="input-group">
+                    <label for="passcode">Bounty Clearance Key</label>
+                    <input type="text" id="passcode" placeholder="This is the way..." autocomplete="off">
+                </div>
+
+                <div class="input-group">
+                    <label>Identity Verification</label>
+                    <div class="captcha-container">
+                        <span id="captcha-display">XXXXX</span>
+                        <button type="button" class="refresh-btn" onclick="generateCaptcha()" title="New Code">↻</button>
+                    </div>
+                    <input type="text" id="captcha-input" placeholder="Type HUD characters" autocomplete="off">
+                </div>
+
+                <button class="btn btn-primary" onclick="handleLogin()">Confirm Directive</button>
+            </div>
+        </div>
+
+        <!-- Success View -->
+        <div id="success-view" class="success-view">
+            <div class="success-icon">M</div>
+            <h2 style="color: var(--sictc-blue); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px;">Asset Unlocked</h2>
+            <p style="color: var(--sictc-grey-dark); font-size: 0.95rem; font-weight: bold;">"This is the way."</p>
+            
+            <div class="viewer-container">
+                <iframe id="pdf-preview" src="" class="pdf-frame" allowfullscreen></iframe>
+                <button onclick="toggleFullScreen()" class="btn btn-outline">⛶ Engage HUD Fullscreen</button>
+            </div>
+
+            <a id="download-btn" href="#" download class="btn btn-secondary">
+                Secure File Locally
+            </a>
+            
+            <button onclick="location.reload()" style="background: none; border: none; color: #BBB; margin-top: 25px; cursor: pointer; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; font-weight: bold;">
+                ← Reset Terminal
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const CONFIG = {
+            passcode: "THISISTHEWAY", 
+            pdfUrl: "Syllabus.pdf" 
+        };
+
+        let currentCaptcha = "";
+
+        window.onload = () => {
+            generateCaptcha();
+            document.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleLogin();
+            });
+        };
+
+        function generateCaptcha() {
+            const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+            let result = "";
+            for (let i = 0; i < 5; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            currentCaptcha = result;
+            document.getElementById('captcha-display').innerText = result;
+            document.getElementById('captcha-input').value = "";
+        }
+
+        function handleLogin() {
+            // Remove spaces from input for the passcode check
+            const enteredPass = document.getElementById('passcode').value.replace(/\s+/g, '').trim().toUpperCase();
+            const enteredCaptcha = document.getElementById('captcha-input').value.trim().toUpperCase();
+            const errorBox = document.getElementById('error-box');
+
+            if (enteredPass === CONFIG.passcode && enteredCaptcha === currentCaptcha) {
+                showSyllabus();
+            } else {
+                errorBox.style.display = 'block';
+                generateCaptcha();
+                
+                const card = document.getElementById('main-card');
+                card.style.transition = "transform 0.1s";
+                const shakeSteps = [10, -10, 10, -10, 0];
+                let i = 0;
+                const interval = setInterval(() => {
+                    card.style.transform = `translateX(${shakeSteps[i]}px)`;
+                    i++;
+                    if (i >= shakeSteps.length) {
+                        clearInterval(interval);
+                        card.style.transition = "all 0.3s ease";
+                    }
+                }, 50);
+            }
+        }
+
+        function showSyllabus() {
+            document.getElementById('login-view').classList.add('hidden');
+            document.getElementById('success-view').style.display = 'block';
+            
+            const pdfFrame = document.getElementById('pdf-preview');
+            const downloadBtn = document.getElementById('download-btn');
+            
+            pdfFrame.src = CONFIG.pdfUrl;
+            downloadBtn.href = CONFIG.pdfUrl;
+        }
+
+        function toggleFullScreen() {
+            const iframe = document.getElementById('pdf-preview');
+            if (iframe.requestFullscreen) {
+                iframe.requestFullscreen();
+            } else if (iframe.webkitRequestFullscreen) { /* Safari */
+                iframe.webkitRequestFullscreen();
+            } else if (iframe.msRequestFullscreen) { /* IE11 */
+                iframe.msRequestFullscreen();
+            }
+        }
+    </script>
+</body>
+</html>
